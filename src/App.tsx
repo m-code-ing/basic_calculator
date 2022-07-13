@@ -4,17 +4,31 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Result from "./Result";
 
-const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const dot = ".";
+const backSpace = "backSpace";
+const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, dot, backSpace];
+
 const operators = ["+", "-", "*", "/"];
 
 function App() {
-  const [digitOne, setDigitOne] = useState<number>();
-  const [digitTwo, setDigitTwo] = useState<number>();
+  const [numDigits, setNumDigits] = useState<number[]>([]);
+  const [firstNum, setFirstNum] = useState<number>();
+  const [secondNum, setDigitTwo] = useState<number>();
   const [operator, setOperator] = useState<string>();
   const [result, setResult] = useState<number>();
 
+  const calcFirstNum = useCallback(() => {
+    let number: number | undefined;
+    let tensPalce = 0;
+    numDigits.forEach((digit) => {
+      tensPalce = tensPalce > 0 ? 10 : 1;
+      number = number ? number * tensPalce + digit : digit;
+    });
+    return number;
+  }, [numDigits]);
+
   const handleSelectOperator = (operator: string) => {
-    if (!digitOne) {
+    if (!firstNum) {
       alert("First Select Digit one");
       return;
     }
@@ -22,15 +36,28 @@ function App() {
   };
 
   const handleSelectDigit = (digit: number) => {
-    if (digitOne !== undefined && operator) {
-      setDigitTwo(digit);
-    } else {
-      setDigitOne(digit);
-    }
+    setNumDigits([...numDigits, digit]);
   };
 
+  const setFirstAndSecondNumbers = useCallback(
+    (num: number | undefined, whichNumber: string) => {
+      if (whichNumber === "second") {
+        setDigitTwo(num);
+      } else {
+        setFirstNum(num);
+      }
+    },
+    []
+  );
+
   const handleClick = (buttonContent: any) => {
-    if (typeof buttonContent !== "number") {
+    if (buttonContent === ".") {
+      console.log("add decimal");
+    } else if (buttonContent === "backSpace") {
+      numDigits.pop();
+      setNumDigits([...numDigits]);
+    } else if (typeof buttonContent !== "number") {
+      setNumDigits([]);
       handleSelectOperator(buttonContent);
     } else if (typeof buttonContent === "number") {
       handleSelectDigit(buttonContent);
@@ -38,34 +65,41 @@ function App() {
   };
 
   const updateCalResult = useCallback(() => {
-    if (digitOne !== undefined && digitTwo !== undefined)
+    if (firstNum !== undefined && secondNum !== undefined) {
       switch (operator) {
         case "+":
-          return digitOne + digitTwo;
+          return firstNum + secondNum;
 
         case "-":
-          return digitOne - digitTwo;
+          return firstNum - secondNum;
 
         case "*":
-          return digitOne * digitTwo;
+          return firstNum * secondNum;
 
         case "/":
-          return digitOne / digitTwo;
+          return firstNum / secondNum;
 
         default:
           break;
       }
-  }, [digitOne, digitTwo, operator]);
+    }
+  }, [firstNum, secondNum, operator]);
 
   useEffect(() => {
-    if (digitTwo !== undefined) setResult(updateCalResult());
-  }, [digitTwo, updateCalResult]);
+    if (secondNum !== undefined) setResult(updateCalResult());
+  }, [secondNum, updateCalResult]);
+
+  // TODO --> commented below code as for now.  Need to execute this code on pressing result button.  Note: Result button needs to be added first.
+  // useEffect(() => {
+  //   setFirstNum(undefined);
+  //   setDigitTwo(undefined);
+  //   setOperator(undefined);
+  // }, []);
 
   useEffect(() => {
-    setDigitOne(undefined);
-    setDigitTwo(undefined);
-    setOperator(undefined);
-  }, [result]);
+    let num = calcFirstNum();
+    setFirstAndSecondNumbers(num, !operator ? "frist" : "second");
+  }, [calcFirstNum, numDigits, operator, setFirstAndSecondNumbers]);
 
   return (
     <Stack
@@ -76,8 +110,8 @@ function App() {
       border={1}>
       <Result
         result={result}
-        digitOne={digitOne}
-        digitTwo={digitTwo}
+        firstNum={firstNum}
+        secondNum={secondNum}
         operator={operator}
       />
       <Grid container direction="row" maxWidth="75%" justifyContent="center">

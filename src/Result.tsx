@@ -1,23 +1,23 @@
 import { Grid, Typography, Stack } from "@mui/material";
 
 type ResultProps = {
-  digitOne?: number;
-  digitTwo?: number;
+  firstNum?: number;
+  secondNum?: number;
   operator?: string;
   result?: number;
 };
 
-const Result = ({ digitOne, digitTwo, operator, result }: ResultProps) => {
+const Result = ({ firstNum, secondNum, operator, result }: ResultProps) => {
   return (
     <Grid container justifyContent="center" textAlign="center">
       <Typography mx={3}>
-        {digitOne !== undefined ? digitOne : "Select First Digit"}
+        {firstNum !== undefined ? firstNum : "Select First Digit"}
       </Typography>
 
       <Typography mx={3}>{operator || "Select Operator"}</Typography>
 
       <Typography mx={3}>
-        {digitTwo !== undefined ? digitTwo : "Select Second Digit"}
+        {secondNum !== undefined ? secondNum : "Select Second Digit"}
       </Typography>
 
       <Stack direction="row">
