@@ -59,13 +59,25 @@ function App() {
     setOperator(operator);
   };
 
+  const handleBackSpace = () => {
+    setResult(undefined);
+    if (secondNum) {
+      setNumDigits(numDigits?.slice(0, numDigits.length - 1));
+    } else {
+      setNumDigits(firstNum?.toString());
+      setOperator(undefined);
+    }
+
+    if (!secondNum && !operator)
+      setNumDigits(numDigits?.slice(0, numDigits.length - 1));
+  };
+
   const updateDigits = (digit: number | string, type?: ButtonTypes) => {
     if (!numDigits?.length && type === "decimal") {
       digit = "0.";
     }
     if (type === "backSpace") {
-      setNumDigits(numDigits?.slice(0, numDigits.length - 1));
-      setResult(undefined);
+      handleBackSpace();
     } else {
       setNumDigits(numDigits ? ((numDigits + digit) as string) : String(digit));
     }
