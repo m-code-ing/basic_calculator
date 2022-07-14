@@ -42,7 +42,7 @@ function App() {
   const [operator, setOperator] = useState<string>();
   const [result, setResult] = useState<number>();
 
-  const calcFirstNum = useCallback(() => {
+  const updateNum = useCallback(() => {
     let num =
       numDigits === undefined || numDigits === ""
         ? undefined
@@ -51,8 +51,9 @@ function App() {
   }, [numDigits]);
 
   const handleSelectOperator = (operator: string) => {
+    setNumDigits(undefined);
     if (!firstNum) {
-      alert("First Select Digit one");
+      alert("Please select first number before selecting operator");
       return;
     }
     setOperator(operator);
@@ -87,7 +88,6 @@ function App() {
     } else if (type === "backSpace") {
       updateDigits(value, type);
     } else if (type === "operators") {
-      setNumDigits(undefined);
       handleSelectOperator(value as string);
     } else if (type === "digits") {
       updateDigits(value as number);
@@ -119,17 +119,10 @@ function App() {
     }
   }, [firstNum, secondNum, operator]);
 
-  // TODO --> commented below code as for now.  Need to execute this code on pressing result button.  Note: Result button needs to be added first.
-  // useEffect(() => {
-  //   setFirstNum(undefined);
-  //   setDigitTwo(undefined);
-  //   setOperator(undefined);
-  // }, []);
-
   useEffect(() => {
-    let num = calcFirstNum();
+    let num = updateNum();
     setFirstAndSecondNumbers(num, !operator ? "frist" : "second");
-  }, [calcFirstNum, numDigits, operator, setFirstAndSecondNumbers]);
+  }, [updateNum, numDigits, operator, setFirstAndSecondNumbers]);
 
   return (
     <Stack

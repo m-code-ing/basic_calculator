@@ -11,13 +11,13 @@ const Result = ({ firstNum, secondNum, operator, result }: ResultProps) => {
   return (
     <Grid container justifyContent="center" textAlign="center">
       <Typography mx={3}>
-        {firstNum !== undefined ? firstNum : "Select First Digit"}
+        {firstNum !== undefined ? firstNum : "Input first number"}
       </Typography>
 
       <Typography mx={3}>{operator || "Select Operator"}</Typography>
 
       <Typography mx={3}>
-        {secondNum !== undefined ? secondNum : "Select Second Digit"}
+        {secondNum !== undefined ? secondNum : "Input second number"}
       </Typography>
 
       <Stack direction="row">
