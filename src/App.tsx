@@ -1,8 +1,9 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack } from "@mui/material";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import NumPad from "./NumPad";
+import OperatorKeys from "./OperatorKeys";
 import Result from "./Result";
 
 export type ButtonTypes = keyof typeof buttons;
@@ -63,6 +64,7 @@ function App() {
     }
     if (type === "backSpace") {
       setNumDigits(numDigits?.slice(0, numDigits.length - 1));
+      setResult(undefined);
     } else {
       setNumDigits(numDigits ? ((numDigits + digit) as string) : String(digit));
     }
@@ -92,6 +94,10 @@ function App() {
     }
   };
 
+  const getResult = () => {
+    setResult(updateCalResult());
+  };
+
   const updateCalResult = useCallback(() => {
     if (firstNum !== undefined && secondNum !== undefined) {
       switch (operator) {
@@ -112,10 +118,6 @@ function App() {
       }
     }
   }, [firstNum, secondNum, operator]);
-
-  useEffect(() => {
-    if (secondNum !== undefined) setResult(updateCalResult());
-  }, [secondNum, updateCalResult]);
 
   // TODO --> commented below code as for now.  Need to execute this code on pressing result button.  Note: Result button needs to be added first.
   // useEffect(() => {
@@ -147,14 +149,11 @@ function App() {
           <NumPad buttons={numPadButtons} handleClick={handleClick} />
         </Grid>
         <Grid container direction="column" flex={1} border={1}>
-          {operators.map((op, index) => (
-            <Grid border={1} key={index}>
-              <Button fullWidth onClick={() => handleClick("operators", op)}>
-                <Typography>{op}</Typography>
-              </Button>
-            </Grid>
-          ))}
+          <OperatorKeys operators={operators} handleClick={handleClick} />
         </Grid>
+      </Grid>
+      <Grid container justifyContent="center">
+        <Button onClick={getResult}>Get Result</Button>
       </Grid>
     </Stack>
   );
