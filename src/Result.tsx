@@ -1,4 +1,4 @@
-import { Grid, Typography, Stack } from "@mui/material";
+import { Grid, Stack, Input } from "@mui/material";
 
 type ResultProps = {
   firstNum?: number;
@@ -9,22 +9,26 @@ type ResultProps = {
 
 const Result = ({ firstNum, secondNum, operator, result }: ResultProps) => {
   return (
-    <Grid container justifyContent="center" textAlign="center">
-      <Typography mx={3}>
-        {firstNum !== undefined ? firstNum : "Input first number"}
-      </Typography>
+    <Grid container justifyContent="center" textAlign="center" border={1}>
+      <Stack direction="row" width="70%" justifyContent="space-around">
+        <Grid item xs={3}>
+          <Input value={firstNum || "First Number"} />
+        </Grid>
+        <Grid item xs={3}>
+          <Input value={operator || "Operator"} />
+        </Grid>
+        <Grid item xs={3}>
+          <Input value={secondNum || "Second Number"} />
+        </Grid>
+      </Stack>
 
-      <Typography mx={3}>{operator || "Select Operator"}</Typography>
-
-      <Typography mx={3}>
-        {secondNum !== undefined ? secondNum : "Input second number"}
-      </Typography>
-
-      <Stack direction="row">
-        <Typography mx={3}>{result !== undefined ? `=` : null}</Typography>
-        <Typography mx={3}>
-          {result !== undefined ? `  ${result}` : null}
-        </Typography>
+      <Stack direction="row" width="30%">
+        <Grid item>
+          <Input value={result !== undefined ? `=` : ""} disableUnderline />
+        </Grid>
+        <Grid item mx={3}>
+          <Input value={result || ""} readOnly disableUnderline />
+        </Grid>
       </Stack>
     </Grid>
   );

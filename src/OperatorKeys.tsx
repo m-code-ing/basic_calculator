@@ -1,5 +1,5 @@
 import { Grid, Button, Typography } from "@mui/material";
-import { ButtonTypes } from "./App";
+import { ButtonTypes } from "./Calculator";
 
 type OperatorKeysProps = {
   operators: string[];

@@ -1,5 +1,5 @@
 import { Button, Grid } from "@mui/material";
-import { ButtonType, ButtonTypes } from "./App";
+import { ButtonType, ButtonTypes } from "./Calculator";
 
 type NumPadProps = {
   buttons: ButtonType[];
