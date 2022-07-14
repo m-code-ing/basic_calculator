@@ -35,20 +35,18 @@ const numPadButtons = [
 ] as Array<ButtonType>;
 
 function App() {
-  const [numDigits, setNumDigits] = useState<number[]>([]);
+  const [numDigits, setNumDigits] = useState<string>();
   const [firstNum, setFirstNum] = useState<number>();
   const [secondNum, setDigitTwo] = useState<number>();
   const [operator, setOperator] = useState<string>();
   const [result, setResult] = useState<number>();
 
   const calcFirstNum = useCallback(() => {
-    let number: number | undefined;
-    let tensPalce = 0;
-    numDigits.forEach((digit) => {
-      tensPalce = tensPalce > 0 ? 10 : 1;
-      number = number ? number * tensPalce + digit : digit;
-    });
-    return number;
+    let num =
+      numDigits === undefined || numDigits === ""
+        ? undefined
+        : parseFloat(numDigits as string);
+    return num;
   }, [numDigits]);
 
   const handleSelectOperator = (operator: string) => {
@@ -59,8 +57,15 @@ function App() {
     setOperator(operator);
   };
 
-  const handleSelectDigit = (digit: number) => {
-    setNumDigits([...numDigits, digit]);
+  const updateDigits = (digit: number | string, type?: ButtonTypes) => {
+    if (!numDigits?.length && type === "decimal") {
+      digit = "0.";
+    }
+    if (type === "backSpace") {
+      setNumDigits(numDigits?.slice(0, numDigits.length - 1));
+    } else {
+      setNumDigits(numDigits ? ((numDigits + digit) as string) : String(digit));
+    }
   };
 
   const setFirstAndSecondNumbers = useCallback(
@@ -76,15 +81,14 @@ function App() {
 
   const handleClick = (type: ButtonTypes, value: string | number) => {
     if (type === "decimal") {
-      console.log("add decimal");
+      updateDigits(value as number);
     } else if (type === "backSpace") {
-      numDigits.pop();
-      setNumDigits([...numDigits]);
+      updateDigits(value, type);
     } else if (type === "operators") {
-      setNumDigits([]);
+      setNumDigits(undefined);
       handleSelectOperator(value as string);
     } else if (type === "digits") {
-      handleSelectDigit(value as number);
+      updateDigits(value as number);
     }
   };
 
